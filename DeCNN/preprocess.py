@@ -61,28 +61,53 @@ def process_gray():
 ### h5py file generator
 
 def h5pygen():
+    f = h5py.File(project_path + 'DeCNN/train.h5', 'w')
+    #f.create_dataset("train_set_x", (28,370,427,1))
+    #f.create_dataset("train_set_y", (28,370,427,1))
+    f1 = h5py.File(project_path + 'DeCNN/test.h5', 'w')
+    #f1.create_dataset("test_set_x", (2,370,427,1))
+    #f1.create_dataset("test_set_y", (2,370,427,1))
+
     X = []
     Y = []
-    f = h5py.File(project_path + 'DeCNN/Depth.h5', 'w')
-    f.create_dataset("X_train_orig", (28,370,427,1))
-    f.create_dataset("Y_train_orig", (28,370,427,1))
-    f.create_dataset("X_test_orig", (2,370,427,1))
-    f.create_dataset("Y_test_orig", (2,370,427,1))
     for relpath, dirs, files in os.walk(project_path + 'DeCNN/Depth_Enh/01_Middlebury_Dataset/'):
-
         for file in files:
             full_path = os.path.join(project_path + 'DeCNN/Depth_Enh/01_Middlebury_Dataset/', relpath, file)
             if file[14:25] == 'noisy_depth':
-                X.append(cv2.imread(full_path, 0))
+                im = cv2.imread(full_path, 0)
+                im = im.tolist()[0:370]
+                for i in range(len(im)):
+                    im[i] = im[i][0:413]
+                X.append(im)
             if file[14:26] == 'output_depth':
-                Y.append(cv2.imread(full_path, 0))
-    for i in range(30):
-        if i < 28:
-            np.append(f["X_train_orig"][i], X[i])
-            np.append(f["Y_train_orig"][i], Y[i])
-        else:
-            np.append(f["X_test_orig"][i-28], X[i])
-            np.append(f["Y_test_orig"][i-28], Y[i])
+                im = cv2.imread(full_path, 0)
+                im = im.tolist()[0:370]
+                for i in range(len(im)):
+                    im[i] = im[i][0:413]
+                Y.append(im)
+    X1 = X[28:29]
+    Y1 = Y[28:29]
+    X = X[0:27]
+    Y = Y[0:27]
+    #Y = np.array(Y)
+    #X = np.array(X)
+    #Y = np.array(Y)
+    f.create_dataset("train_set_x", data=X)
+    f.create_dataset("train_set_y", data=Y)
+    f1.create_dataset("test_set_x", data=X1)
+    f1.create_dataset("test_set_y", data=Y1)
+    # f["train_set_x"] = X
+    # f["train_set_y"] = Y
+    # f1["test_set_x"] = X1
+    # f1["test_set_y"] = Y1
+    # for i in range(30):
+    #     if i < 28:
+    #         np.append(f["train_set_x"][i], X[i])
+    #         np.append(f["train_set_y"][i], Y[i])
+    #         print(f["train_set_x"][i])
+    #     else:
+    #         np.append(f1["test_set_x"][i-28], X[i])
+    #         np.append(f1["test_set_y"][i-28], Y[i])
 
     # X_train = np.array(X_train, dtype=np.uint8)
     # Y_train = np.array(Y_train, dtype=np.uint8)
@@ -91,3 +116,9 @@ def h5pygen():
 
 
 h5pygen()
+
+f = h5py.File(project_path+'DeCNN/train.h5', 'r')
+x = np.array(f['train_set_x'][:])
+print(x.shape)
+print(x[0].shape)
+print(x)
