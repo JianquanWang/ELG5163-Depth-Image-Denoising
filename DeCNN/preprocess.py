@@ -5,6 +5,7 @@ import os
 import cv2
 import numpy as np
 import h5py
+from PIL import Image
 
 project_path = r'/home/jianquan/PycharmProjects/ELG5163-Depth-Image-Denoising/'
 
@@ -119,10 +120,13 @@ def h5pygen():
     # Y_test = np.array(Y_test, dtype=np.uint8)
 
 
-h5pygen()
+# h5pygen()
+#
+# f = h5py.File(project_path+'DeCNN/train.h5', 'r')
+# x = np.array(f['train_set_x'][:])
+# print(x.shape)
+# print(x[0].shape)
+# print(x)
 
-f = h5py.File(project_path+'DeCNN/train.h5', 'r')
-x = np.array(f['train_set_x'][:])
-print(x.shape)
-print(x[0].shape)
-print(x)
+im = Image.open("./result/1.tiff")
+print(np.array(im))

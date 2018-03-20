@@ -199,8 +199,8 @@ def compute_cost(Z3, Y):
 
 # GRADED FUNCTION: model
 
-def model(X_train, Y_train, X_test, Y_test, learning_rate=0.0009,
-          num_epochs=5, minibatch_size=2, print_cost=True):
+def model(X_train, Y_train, X_test, Y_test, learning_rate=0.00009,
+          num_epochs=100, minibatch_size=2, print_cost=True):
     """
     Implements a three-layer ConvNet in Tensorflow:
     CONV2D -> RELU -> MAXPOOL -> CONV2D -> RELU -> MAXPOOL -> FLATTEN -> FULLYCONNECTED
@@ -319,20 +319,20 @@ def model(X_train, Y_train, X_test, Y_test, learning_rate=0.0009,
         saver = tf.train.Saver()
         saver.restore(sess, "./sample/model.ckpt")
         train_result = sess.run(Z3, feed_dict={X: X_train})
-        print(type(train_result), train_result.shape)
+        #print(type(train_result), train_result.shape)
         train_result = train_result * 255
-        train_result.astype(int)
+        train_result = train_result.astype(np.uint8)
         test_result = sess.run(Z3, feed_dict={X: X_test})
         test_result = test_result * 255
-        test_result.astype(int)
+        test_result = test_result.astype(np.uint8)
         k = 1
         for im in train_result:
-            i = Image.fromarray(im)
-            i.save("./result/"+k +".jpg")
+            i = Image.fromarray(im.reshape(370, 413))
+            i.save("./result/"+str(k) +".tiff")
             k += 1
         for im in test_result:
-            i = Image.fromarray(im)
-            i.save("./result/"+k+".jpg")
+            i = Image.fromarray(im.reshape(370, 413))
+            i.save("./result/"+str(k)+".tiff")
             k += 1
         return parameters
 
