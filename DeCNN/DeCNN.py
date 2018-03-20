@@ -83,10 +83,6 @@ print("X_test shape: " + str(X_test.shape))
 print("Y_test shape: " + str(Y_test.shape))
 conv_layers = {}
 
-print(X_train_orig[0][0])
-im = Image.fromarray(X_train_orig[0])
-im.show()
-sys.exit()
 
 
 # GRADED FUNCTION: create_placeholders

@@ -85,10 +85,14 @@ def h5pygen():
                 for i in range(len(im)):
                     im[i] = im[i][0:413]
                 Y.append(im)
-    X1 = X[28:29]
-    Y1 = Y[28:29]
-    X = X[0:27]
-    Y = Y[0:27]
+    X1 = X[28:30]
+    Y1 = Y[28:30]
+    X = X[0:28]
+    Y = Y[0:28]
+    X = np.array(X).reshape(28,370,413,1)
+    Y = np.array(Y).reshape(28, 370, 413, 1)
+    X1 = np.array(X1).reshape(2, 370, 413, 1)
+    Y1 = np.array(Y1).reshape(2, 370, 413, 1)
     #Y = np.array(Y)
     #X = np.array(X)
     #Y = np.array(Y)
