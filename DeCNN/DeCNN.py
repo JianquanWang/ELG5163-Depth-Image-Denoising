@@ -71,10 +71,10 @@ def random_mini_batches(X, Y, mini_batch_size=64, seed=0):
 np.random.seed(1)
 # Loading the data
 X_train_orig, Y_train_orig, X_test_orig, Y_test_orig = load_dataset()
-X_train = X_train_orig
-X_test = X_test_orig
-Y_train = Y_train_orig
-Y_test = Y_test_orig
+X_train = X_train_orig/255.
+X_test = X_test_orig/255.
+Y_train = Y_train_orig/255.
+Y_test = Y_test_orig/255.
 print("number of training examples = " + str(X_train.shape[0]))
 print("number of test examples = " + str(X_test.shape[0]))
 print("X_train shape: " + str(X_train.shape))
@@ -199,8 +199,8 @@ def compute_cost(Z3, Y):
 
 # GRADED FUNCTION: model
 
-def model(X_train, Y_train, X_test, Y_test, learning_rate=0.009,
-          num_epochs=100, minibatch_size=64, print_cost=True):
+def model(X_train, Y_train, X_test, Y_test, learning_rate=0.0009,
+          num_epochs=5, minibatch_size=2, print_cost=True):
     """
     Implements a three-layer ConvNet in Tensorflow:
     CONV2D -> RELU -> MAXPOOL -> CONV2D -> RELU -> MAXPOOL -> FLATTEN -> FULLYCONNECTED
@@ -277,6 +277,7 @@ def model(X_train, Y_train, X_test, Y_test, learning_rate=0.009,
                 # IMPORTANT: The line that runs the graph on a minibatch.
                 # Run the session to execute the optimizer and the cost, the feedict should contain a minibatch for (X,Y).
                 _, temp_cost = sess.run([optimizer, cost], feed_dict={X: minibatch_X, Y: minibatch_Y})
+                #print(temp_cost)
 
                 minibatch_cost += temp_cost / num_minibatches
 
@@ -291,7 +292,7 @@ def model(X_train, Y_train, X_test, Y_test, learning_rate=0.009,
 
         # graph
         writer = tf.summary.FileWriter('./my_graph', sess.graph)  # tensorboard --logdir="my_graph"
-        writer.colse()
+        writer.close()
 
         # plot the cost
         plt.plot(np.squeeze(costs))
@@ -318,7 +319,12 @@ def model(X_train, Y_train, X_test, Y_test, learning_rate=0.009,
         saver = tf.train.Saver()
         saver.restore(sess, "./sample/model.ckpt")
         train_result = sess.run(Z3, feed_dict={X: X_train})
+        print(type(train_result), train_result.shape)
+        train_result = train_result * 255
+        train_result.astype(int)
         test_result = sess.run(Z3, feed_dict={X: X_test})
+        test_result = test_result * 255
+        test_result.astype(int)
         k = 1
         for im in train_result:
             i = Image.fromarray(im)
